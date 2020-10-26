@@ -1,10 +1,6 @@
 steps:
 - powershell: |
-    Write-Host "logging pwd"
-    Get-Location
-    Write-Host "Dump path BEFORE install"
-    Get-ChildItem Env:Path
-    Write-Host "downloading python installer exe"
+    Write-Host "Downloading python installer exe"
     Start-BitsTransfer -Source https://www.python.org/ftp/python/3.8.5/python-3.8.5-amd64.exe  -Destination python_installer.exe
     $hash = (Get-FileHash python_installer.exe).Hash.ToLower()
     $expectedHash = "cd427c7b17337d7c13761ca20877d2d8be661bd30415ddc17072a31a65a91b64"
@@ -15,8 +11,7 @@ steps:
     }
     Write-Host "Running python_installer.exe"
     & .\python_installer.exe /passive /log .\log.txt TargetDir=C:\Python38
-    Write-Host "Dumping current dir"
-    Get-ChildItem "."
+    Write-Host "Exit code was: $LastExitCode"
     Write-Host "Dumping log"
     Get-Content -Path .\log.txt
     Write-Host "Dumping C: dir"
