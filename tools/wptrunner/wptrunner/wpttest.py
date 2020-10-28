@@ -458,9 +458,9 @@ class ReftestTest(Test):
 
     def __init__(self, tests_root, url, inherit_metadata, test_metadata, references,
                  timeout=None, path=None, viewport_size=None, dpi=None, fuzzy=None,
-                 protocol="http", quic=False):
+                 protocol="http", subdomain=False, quic=False):
         Test.__init__(self, tests_root, url, inherit_metadata, test_metadata, timeout,
-                      path, protocol, quic)
+                      path, protocol, subdomain, quic)
 
         for _, ref_type in references:
             if ref_type not in ("==", "!="):
@@ -497,6 +497,7 @@ class ReftestTest(Test):
                    [],
                    timeout=timeout,
                    path=manifest_test.path,
+                   subdomain=manifest_test.subdomain,
                    quic=quic,
                    **cls.cls_kwargs(manifest_test))
 
