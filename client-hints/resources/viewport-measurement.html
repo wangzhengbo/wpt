@@ -1,0 +1,9 @@
+<script>
+(async () => {
+  const response = await fetch("viewport.py");
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+  const body = await reader.read();
+  parent.postMessage(body.value, "*");
+})();
+</script>
+
