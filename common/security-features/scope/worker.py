@@ -1,8 +1,7 @@
 import os, sys, json
 
 from wptserve.utils import isomorphic_decode, isomorphic_encode
-sys.path.insert(0, os.path.dirname(os.path.abspath(isomorphic_decode(__file__))))
-import util
+util = __import__("common.security-features.scope.util")
 
 def main(request, response):
   policyDeliveries = json.loads(request.GET.first(b'policyDeliveries', b'[]'))
