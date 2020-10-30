@@ -550,8 +550,7 @@ function validateAuthenticatorAssertionResponse(assert) {
     // TODO: parseAuthenticatorData() and make sure flags are correct
 }
 
-function standardSetup(cb, options = {}) {
-    // Setup an automated testing environment if available.
+function standardSetup(cb, options = {}, name="") {
     let authenticatorArgs = {
         protocol: "ctap1/u2f",
         transport: "usb",
@@ -560,19 +559,16 @@ function standardSetup(cb, options = {}) {
         isUserVerified: false,
     };
     extendObject(authenticatorArgs, options);
-    window.test_driver.add_virtual_authenticator(authenticatorArgs).then(authenticator => {
+    let authenticator = "";
+    promise_test(async t => {
+      authenticator = await window.test_driver.add_virtual_authenticator(authenticatorArgs);
+    }, name + "/Setup");
+    try {
         cb();
-        // XXX add a subtest to clean up the virtual authenticator since
-        // testharness does not support waiting for promises on cleanup.
+    } finally {
         promise_test(() => window.test_driver.remove_virtual_authenticator(authenticator),
-                     "Clean up the test environment");
-    }).catch(error => {
-        if (error !== "error: Action add_virtual_authenticator not implemented") {
-            throw error;
-        }
-        // The protocol is not available. Continue manually.
-        cb();
-    });
+                     name + "/Cleanup");
+    }
 }
 
 /* JSHINT */
